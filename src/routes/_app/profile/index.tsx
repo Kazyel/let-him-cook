@@ -1,6 +1,6 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/profile')({
+export const Route = createFileRoute('/_app/profile/')({
   component: ProfileComponent,
   beforeLoad({ context }) {
     const { user, loading } = context.auth

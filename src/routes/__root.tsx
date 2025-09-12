@@ -5,14 +5,18 @@ import { TanstackDevtools } from '@tanstack/react-devtools'
 import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
 
 import type { QueryClient } from '@tanstack/react-query'
+import type { useAuth } from '@/providers/auth-provider'
+import { Navbar } from '@/components/nav/navbar'
 
 interface MyRouterContext {
   queryClient: QueryClient
+  auth: ReturnType<typeof useAuth>
 }
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
   component: () => (
     <>
+      <Navbar />
       <Outlet />
       <TanstackDevtools
         config={{

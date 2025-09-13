@@ -13,7 +13,6 @@ import { Route as AppRouteImport } from './routes/_app'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as AuthRegisterRouteImport } from './routes/auth/register'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
-import { Route as AppProfileIndexRouteImport } from './routes/_app/profile/index'
 import { Route as AppProfileUserIdRouteImport } from './routes/_app/profile/$userId'
 
 const AppRoute = AppRouteImport.update({
@@ -35,11 +34,6 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   path: '/auth/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AppProfileIndexRoute = AppProfileIndexRouteImport.update({
-  id: '/profile/',
-  path: '/profile/',
-  getParentRoute: () => AppRoute,
-} as any)
 const AppProfileUserIdRoute = AppProfileUserIdRouteImport.update({
   id: '/profile/$userId',
   path: '/profile/$userId',
@@ -51,14 +45,12 @@ export interface FileRoutesByFullPath {
   '/auth/register': typeof AuthRegisterRoute
   '/': typeof AppIndexRoute
   '/profile/$userId': typeof AppProfileUserIdRoute
-  '/profile': typeof AppProfileIndexRoute
 }
 export interface FileRoutesByTo {
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/': typeof AppIndexRoute
   '/profile/$userId': typeof AppProfileUserIdRoute
-  '/profile': typeof AppProfileIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -67,18 +59,12 @@ export interface FileRoutesById {
   '/auth/register': typeof AuthRegisterRoute
   '/_app/': typeof AppIndexRoute
   '/_app/profile/$userId': typeof AppProfileUserIdRoute
-  '/_app/profile/': typeof AppProfileIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/auth/login'
-    | '/auth/register'
-    | '/'
-    | '/profile/$userId'
-    | '/profile'
+  fullPaths: '/auth/login' | '/auth/register' | '/' | '/profile/$userId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/auth/login' | '/auth/register' | '/' | '/profile/$userId' | '/profile'
+  to: '/auth/login' | '/auth/register' | '/' | '/profile/$userId'
   id:
     | '__root__'
     | '/_app'
@@ -86,7 +72,6 @@ export interface FileRouteTypes {
     | '/auth/register'
     | '/_app/'
     | '/_app/profile/$userId'
-    | '/_app/profile/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -125,13 +110,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_app/profile/': {
-      id: '/_app/profile/'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof AppProfileIndexRouteImport
-      parentRoute: typeof AppRoute
-    }
     '/_app/profile/$userId': {
       id: '/_app/profile/$userId'
       path: '/profile/$userId'
@@ -145,13 +123,11 @@ declare module '@tanstack/react-router' {
 interface AppRouteChildren {
   AppIndexRoute: typeof AppIndexRoute
   AppProfileUserIdRoute: typeof AppProfileUserIdRoute
-  AppProfileIndexRoute: typeof AppProfileIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppIndexRoute: AppIndexRoute,
   AppProfileUserIdRoute: AppProfileUserIdRoute,
-  AppProfileIndexRoute: AppProfileIndexRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)

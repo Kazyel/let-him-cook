@@ -44,12 +44,14 @@ function LoginComponent() {
   }
 
   return (
-    <div className="flex items-center justify-center p-4">
+    <div className="flex items-center justify-center p-4 min-h-screen">
       <form
         onSubmit={handleLogin}
         className="w-full max-w-sm p-6 bg-white rounded-lg shadow-md"
       >
-        <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
+        <h2 className="text-2xl font-bold mb-4 text-center text-black">
+          Login
+        </h2>
 
         {error && (
           <div
@@ -98,7 +100,7 @@ function LoginComponent() {
 
         <div className="flex items-center justify-between">
           <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-blue-500 hover:bg-blue-700 text-foreground font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             type="submit"
             disabled={loading}
           >

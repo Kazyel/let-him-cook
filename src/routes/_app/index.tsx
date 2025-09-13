@@ -1,4 +1,3 @@
-import { Navbar } from '@/components/nav/navbar'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_app/')({
@@ -8,7 +7,7 @@ export const Route = createFileRoute('/_app/')({
 function App() {
   return (
     <>
-      <div className="p-2">
+      <div className="p-2 text-foreground">
         <h3>Bem-vindo à Plataforma de Receitas!</h3>
       </div>
     </>

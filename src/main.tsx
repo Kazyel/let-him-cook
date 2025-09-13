@@ -9,6 +9,7 @@ import { routeTree } from './routeTree.gen.ts'
 import './styles.css'
 import reportWebVitals from './reportWebVitals.ts'
 import { AuthProvider, useAuth } from './lib/providers/auth-provider.tsx'
+import { ThemeProvider } from './lib/providers/theme-provider.tsx'
 
 const TanStackQueryProviderContext = TanStackQueryProvider.getContext()
 
@@ -37,7 +38,9 @@ if (rootElement && !rootElement.innerHTML) {
     <StrictMode>
       <TanStackQueryProvider.Provider {...TanStackQueryProviderContext}>
         <AuthProvider>
-          <App />
+          <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+            <App />
+          </ThemeProvider>
         </AuthProvider>
       </TanStackQueryProvider.Provider>
     </StrictMode>,

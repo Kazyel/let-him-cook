@@ -13,6 +13,9 @@ import { Route as AppRouteImport } from './routes/_app'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as AuthRegisterRouteImport } from './routes/auth/register'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
+import { Route as AppRecipesIndexRouteImport } from './routes/_app/recipes/index'
+import { Route as AppRecipesNewRouteImport } from './routes/_app/recipes/new'
+import { Route as AppRecipesRecipeIdRouteImport } from './routes/_app/recipes/$recipeId'
 import { Route as AppProfileUserIdRouteImport } from './routes/_app/profile/$userId'
 
 const AppRoute = AppRouteImport.update({
@@ -34,6 +37,21 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   path: '/auth/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppRecipesIndexRoute = AppRecipesIndexRouteImport.update({
+  id: '/recipes/',
+  path: '/recipes/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppRecipesNewRoute = AppRecipesNewRouteImport.update({
+  id: '/recipes/new',
+  path: '/recipes/new',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppRecipesRecipeIdRoute = AppRecipesRecipeIdRouteImport.update({
+  id: '/recipes/$recipeId',
+  path: '/recipes/$recipeId',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppProfileUserIdRoute = AppProfileUserIdRouteImport.update({
   id: '/profile/$userId',
   path: '/profile/$userId',
@@ -45,12 +63,18 @@ export interface FileRoutesByFullPath {
   '/auth/register': typeof AuthRegisterRoute
   '/': typeof AppIndexRoute
   '/profile/$userId': typeof AppProfileUserIdRoute
+  '/recipes/$recipeId': typeof AppRecipesRecipeIdRoute
+  '/recipes/new': typeof AppRecipesNewRoute
+  '/recipes': typeof AppRecipesIndexRoute
 }
 export interface FileRoutesByTo {
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/': typeof AppIndexRoute
   '/profile/$userId': typeof AppProfileUserIdRoute
+  '/recipes/$recipeId': typeof AppRecipesRecipeIdRoute
+  '/recipes/new': typeof AppRecipesNewRoute
+  '/recipes': typeof AppRecipesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -59,12 +83,29 @@ export interface FileRoutesById {
   '/auth/register': typeof AuthRegisterRoute
   '/_app/': typeof AppIndexRoute
   '/_app/profile/$userId': typeof AppProfileUserIdRoute
+  '/_app/recipes/$recipeId': typeof AppRecipesRecipeIdRoute
+  '/_app/recipes/new': typeof AppRecipesNewRoute
+  '/_app/recipes/': typeof AppRecipesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/auth/login' | '/auth/register' | '/' | '/profile/$userId'
+  fullPaths:
+    | '/auth/login'
+    | '/auth/register'
+    | '/'
+    | '/profile/$userId'
+    | '/recipes/$recipeId'
+    | '/recipes/new'
+    | '/recipes'
   fileRoutesByTo: FileRoutesByTo
-  to: '/auth/login' | '/auth/register' | '/' | '/profile/$userId'
+  to:
+    | '/auth/login'
+    | '/auth/register'
+    | '/'
+    | '/profile/$userId'
+    | '/recipes/$recipeId'
+    | '/recipes/new'
+    | '/recipes'
   id:
     | '__root__'
     | '/_app'
@@ -72,6 +113,9 @@ export interface FileRouteTypes {
     | '/auth/register'
     | '/_app/'
     | '/_app/profile/$userId'
+    | '/_app/recipes/$recipeId'
+    | '/_app/recipes/new'
+    | '/_app/recipes/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -110,6 +154,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app/recipes/': {
+      id: '/_app/recipes/'
+      path: '/recipes'
+      fullPath: '/recipes'
+      preLoaderRoute: typeof AppRecipesIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/recipes/new': {
+      id: '/_app/recipes/new'
+      path: '/recipes/new'
+      fullPath: '/recipes/new'
+      preLoaderRoute: typeof AppRecipesNewRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/recipes/$recipeId': {
+      id: '/_app/recipes/$recipeId'
+      path: '/recipes/$recipeId'
+      fullPath: '/recipes/$recipeId'
+      preLoaderRoute: typeof AppRecipesRecipeIdRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/profile/$userId': {
       id: '/_app/profile/$userId'
       path: '/profile/$userId'
@@ -123,11 +188,17 @@ declare module '@tanstack/react-router' {
 interface AppRouteChildren {
   AppIndexRoute: typeof AppIndexRoute
   AppProfileUserIdRoute: typeof AppProfileUserIdRoute
+  AppRecipesRecipeIdRoute: typeof AppRecipesRecipeIdRoute
+  AppRecipesNewRoute: typeof AppRecipesNewRoute
+  AppRecipesIndexRoute: typeof AppRecipesIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppIndexRoute: AppIndexRoute,
   AppProfileUserIdRoute: AppProfileUserIdRoute,
+  AppRecipesRecipeIdRoute: AppRecipesRecipeIdRoute,
+  AppRecipesNewRoute: AppRecipesNewRoute,
+  AppRecipesIndexRoute: AppRecipesIndexRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)

@@ -1,7 +1,7 @@
 import { Link, createFileRoute, redirect } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, PlusIcon } from 'lucide-react'
 import { getProfileByUserID, getRecipesByUserID } from '@/services/supabase'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { useAuth } from '@/lib/providers/auth-provider'
@@ -23,10 +23,10 @@ export const Route = createFileRoute('/_app/profile/$userId')({
 })
 
 function RouteComponent() {
-  const params = Route.useParams()
-  const { user } = useAuth()
-
   const [isEditing, setIsEditing] = useState(false)
+
+  const { user } = useAuth()
+  const params = Route.useParams()
 
   const {
     data: profile,
@@ -48,7 +48,7 @@ function RouteComponent() {
 
   if (isLoadingProfile || isLoadingRecipes) {
     return (
-      <div className="w-[min(100%,1200px)] py-16 px-12 mx-auto flex-row flex">
+      <div className="w-[min(100%,1300px)] py-16 px-12 mx-auto flex-row flex">
         <div className="flex flex-row">
           <Skeleton className="h-[250px] w-[250px] rounded-xl" />
           <div className="flex-1 flex flex-col gap-4 p-10">
@@ -77,8 +77,10 @@ function RouteComponent() {
     )
   }
 
+  const isCurrentUser = user.id === profile.user_id
+
   return (
-    <div className="w-[clamp(20vw,1200px,100%)] py-16 px-12 mx-auto flex-col md:flex-row flex">
+    <div className="w-[clamp(20vw,1300px,100%)] py-16 px-12 mx-auto flex-col md:flex-row flex">
       <Avatar className="border-2 border-amber-500/30 h-[clamp(150px,40vw,250px)] w-[clamp(150px,40vw,250px)]">
         <AvatarImage src={profile.avatar_url} />
         <AvatarFallback className="text-4xl text-foreground bg-transparent">
@@ -90,7 +92,7 @@ function RouteComponent() {
         <div className="flex flex-col gap-y-2">
           <h1 className="text-6xl font-bold text-foreground">{profile.name}</h1>
 
-          {user.id === profile.user_id && (
+          {isCurrentUser && (
             <EditBio
               userId={user.id}
               isEditing={isEditing}
@@ -101,31 +103,61 @@ function RouteComponent() {
 
         <div className="py-4 mb-10">
           {!isEditing && (
-            <p className="text-xl text-foreground/85">{profile.description}</p>
+            <p className="text-base text-foreground/85">{profile.bio}</p>
           )}
         </div>
 
         <div className="flex flex-col gap-y-4">
-          {recipes && recipes.length > 0 ? (
-            recipes.map((recipe) => (
-              <div key={recipe.title} className="flex gap-x-4 items-center">
-                <div className="w-10 h-10 rounded-full overflow-hidden bg-amber-500/30">
-                  <img
-                    src={recipe.image_url}
-                    alt={recipe.title}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <p className="text-xl text-foreground font-bold">
-                  {recipe.title}
+          <div className="flex items-center justify-between w-full border-b-2 border-amber-500/30 pb-4">
+            {isCurrentUser ? (
+              <h2 className="text-4xl text-foreground font-bold">My recipes</h2>
+            ) : (
+              <h2 className="text-4xl text-foreground font-bold">
+                Recipes by {profile.name}
+              </h2>
+            )}
+
+            {isCurrentUser && (
+              <div className="flex gap-x-2.5 items-center group mt-3">
+                <button className="text-muted-foreground size-5 border border-muted-foreground rounded cursor-pointer group-hover:text-foreground/80 transition-all duration-150 group-hover:border-foreground/80">
+                  <PlusIcon className="size-4 mx-auto" />
+                </button>
+
+                <p className="text-sm text-muted-foreground group-hover:text-foreground/80 transition-all duration-150 group-hover:underline cursor-pointer font-semibold">
+                  Create new recipe
                 </p>
               </div>
-            ))
-          ) : (
-            <p className="text-foreground font-bold">
-              This user hasn't posted any recipe yet.
-            </p>
-          )}
+            )}
+          </div>
+
+          <div className="flex flex-col gap-y-6">
+            <div className="flex flex-col gap-y-4">
+              {recipes && recipes.length > 0 ? (
+                recipes.map((recipe) => (
+                  <div
+                    key={recipe.title}
+                    className="flex gap-x-4 mt-4 items-center"
+                  >
+                    <div className="w-10 h-10 rounded-full overflow-hidden bg-amber-500/30">
+                      <img
+                        src={recipe.image_url}
+                        alt={recipe.title}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+
+                    <p className="text-xl text-foreground font-bold">
+                      {recipe.title}
+                    </p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-muted-foreground font-semibold italic">
+                  This user hasn't posted any recipe yet.
+                </p>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </div>

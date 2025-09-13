@@ -10,12 +10,35 @@ export async function getProfileByUserID(uuid: string) {
     const { data, error } = await supabase
       .schema('public')
       .from('profiles')
-      .select('user_id, name, description, avatar_url')
+      .select('user_id, name, bio, avatar_url')
       .eq('user_id', uuid)
       .single()
 
     if (error) {
       console.error('Erro ao buscar o usuário:', error.message)
+      return null
+    }
+
+    return data
+  } catch (error) {
+    console.error('Erro inesperado:', error)
+    return null
+  }
+}
+
+export async function getPaginatedRecipes(page: number) {
+  try {
+    const { data, error } = await supabase
+      .schema('public')
+      .from('recipes')
+      .select(
+        'title, description, ingredients, instructions, user_id, image_url, created_at',
+      )
+      .order('created_at', { ascending: false })
+      .range(page * 10, page * 10 + 10)
+
+    if (error) {
+      console.error('Erro ao buscar as receitas:', error.message)
       return null
     }
 
@@ -36,7 +59,30 @@ export async function getRecipesByUserID(uuid: string) {
       .limit(10)
 
     if (error) {
-      console.error('Erro ao buscar o usuário:', error.message)
+      console.error('Erro ao buscar a receita:', error.message)
+      return null
+    }
+
+    return data
+  } catch (error) {
+    console.error('Erro inesperado:', error)
+    return null
+  }
+}
+
+export async function getSingleRecipeById(id: string) {
+  try {
+    const { data, error } = await supabase
+      .schema('public')
+      .from('recipes')
+      .select(
+        'title, description, ingredients, instructions, user_id, image_url, created_at',
+      )
+      .eq('id', id)
+      .single()
+
+    if (error) {
+      console.error('Erro ao buscar a receita:', error.message)
       return null
     }
 

@@ -13,7 +13,7 @@ async function updateProfileBio(userId: string, bio: string) {
   const { error } = await supabase
     .from('profiles')
     .update({
-      description: bio,
+      bio,
     })
     .eq('user_id', userId)
 
@@ -43,7 +43,7 @@ export function EditBio({ userId, isEditing, setIsEditing }: EditBioProps) {
   if (!isEditing) {
     return (
       <button
-        className="cursor-pointer flex gap-2 items-center text-amber-500 hover:text-amber-400 transition-all duration-150"
+        className="cursor-pointer flex gap-2 items-center text-amber-500 hover:text-amber-400 transition-all duration-150 text-sm"
         onClick={() => setIsEditing(true)}
       >
         <EditIcon className="size-4" />

@@ -134,22 +134,30 @@ function RouteComponent() {
             <div className="flex flex-col gap-y-4">
               {recipes && recipes.length > 0 ? (
                 recipes.map((recipe) => (
-                  <div
+                  <Link
                     key={recipe.title}
-                    className="flex gap-x-4 mt-4 items-center"
+                    to={`/recipes/$recipeId`}
+                    params={{ recipeId: recipe.id }}
+                    className="flex gap-x-4 items-center justify-between flex-1 hover:bg-amber-500/10 p-4 rounded-lg transition-all duration-150 cursor-pointer"
                   >
-                    <div className="w-10 h-10 rounded-full overflow-hidden bg-amber-500/30">
-                      <img
-                        src={recipe.image_url}
-                        alt={recipe.title}
-                        className="w-full h-full object-cover"
-                      />
+                    <div className="flex items-center gap-x-4">
+                      <div className="w-10 h-10 rounded-full overflow-hidden bg-amber-500/30">
+                        <img
+                          src={recipe.image_url}
+                          alt={recipe.title}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+
+                      <p className="text-xl text-foreground font-bold">
+                        {recipe.title}
+                      </p>
                     </div>
 
-                    <p className="text-xl text-foreground font-bold">
-                      {recipe.title}
+                    <p className="text-muted-foreground">
+                      {new Date(recipe.created_at).toLocaleDateString()}
                     </p>
-                  </div>
+                  </Link>
                 ))
               ) : (
                 <p className="text-muted-foreground font-semibold italic">

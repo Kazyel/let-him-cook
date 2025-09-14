@@ -5,12 +5,32 @@ const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string
 
 const supabase = createClient(supabaseUrl, supabaseKey)
 
+export type UserProfile = {
+  user_id: string
+  name: string
+  bio: string
+  avatar_url: string
+  created_at: string
+}
+
+export type Recipe = {
+  id: string
+  title: string
+  description: string
+  ingredients: Array<string>
+  instructions: Array<string>
+  user_id: string
+  image_url: string
+  video_url: string
+  created_at: string
+}
+
 export async function getProfileByUserID(uuid: string) {
   try {
     const { data, error } = await supabase
       .schema('public')
       .from('profiles')
-      .select('user_id, name, bio, avatar_url')
+      .select('user_id, name, bio, avatar_url, created_at')
       .eq('user_id', uuid)
       .single()
 
@@ -19,7 +39,7 @@ export async function getProfileByUserID(uuid: string) {
       return null
     }
 
-    return data
+    return data as UserProfile
   } catch (error) {
     console.error('Erro inesperado:', error)
     return null
@@ -31,9 +51,7 @@ export async function getPaginatedRecipes(page: number) {
     const { data, error } = await supabase
       .schema('public')
       .from('recipes')
-      .select(
-        'title, description, ingredients, instructions, user_id, image_url, created_at',
-      )
+      .select('title, description, user_id, image_url, created_at')
       .order('created_at', { ascending: false })
       .range(page * 10, page * 10 + 10)
 
@@ -42,7 +60,9 @@ export async function getPaginatedRecipes(page: number) {
       return null
     }
 
-    return data
+    return data as Array<
+      Omit<Recipe, 'instructions' | 'ingredients' | 'video_url'>
+    >
   } catch (error) {
     console.error('Erro inesperado:', error)
     return null
@@ -54,7 +74,7 @@ export async function getRecipesByUserID(uuid: string) {
     const { data, error } = await supabase
       .schema('public')
       .from('recipes')
-      .select('title, description, image_url')
+      .select('id, title, description, image_url, created_at')
       .eq('user_id', uuid)
       .limit(10)
 
@@ -63,7 +83,9 @@ export async function getRecipesByUserID(uuid: string) {
       return null
     }
 
-    return data
+    return data as Array<
+      Omit<Recipe, 'instructions' | 'ingredients' | 'video_url'>
+    >
   } catch (error) {
     console.error('Erro inesperado:', error)
     return null
@@ -76,7 +98,7 @@ export async function getSingleRecipeById(id: string) {
       .schema('public')
       .from('recipes')
       .select(
-        'title, description, ingredients, instructions, user_id, image_url, created_at',
+        'title, description, ingredients, instructions, user_id, image_url, video_url, created_at',
       )
       .eq('id', id)
       .single()
@@ -86,7 +108,7 @@ export async function getSingleRecipeById(id: string) {
       return null
     }
 
-    return data
+    return data as Recipe
   } catch (error) {
     console.error('Erro inesperado:', error)
     return null

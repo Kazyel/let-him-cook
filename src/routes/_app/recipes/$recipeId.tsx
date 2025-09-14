@@ -103,25 +103,25 @@ function RouteComponent() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-y-4">
-          <div className="flex items-center w-full gap-x-4 border-b-2 border-amber-500/30 pb-4">
-            <CookingPotIcon className="size-9 text-amber-500 shrink-0" />
-            <h2 className="text-4xl text-foreground font-bold">
-              Video Tutorial
-            </h2>
-          </div>
-          <div className="flex flex-col gap-y-6 mt-2">
+        {recipe.video_url && (
+          <div className="flex flex-col gap-y-4">
+            <div className="flex items-center w-full gap-x-4 border-b-2 border-amber-500/30 pb-4">
+              <CookingPotIcon className="size-9 text-amber-500 shrink-0" />
+              <h2 className="text-4xl text-foreground font-bold">
+                Video Tutorial
+              </h2>
+            </div>
+
             <iframe
-              className="w-full h-[clamp(300px,30vw,500px)] rounded-xl"
+              className="w-full h-[clamp(300px,30vw,500px)] rounded-xl mt-2"
               src={getEmbedUrl(recipe.video_url)}
               title="Video Tutorial"
-              frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               referrerPolicy="strict-origin-when-cross-origin"
               allowFullScreen
             ></iframe>
           </div>
-        </div>
+        )}
       </div>
     </div>
   )

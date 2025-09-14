@@ -5,6 +5,7 @@ import supabase from '@/services/supabase'
 
 interface EditBioProps {
   userId: string
+  currentBio: string
   isEditing: boolean
   setIsEditing: (isEditing: boolean) => void
 }
@@ -23,15 +24,19 @@ async function updateProfileBio(userId: string, bio: string) {
   }
 }
 
-export function EditBio({ userId, isEditing, setIsEditing }: EditBioProps) {
-  const [bioMessage, setBioMessage] = useState('')
+export function EditBio({
+  userId,
+  currentBio,
+  isEditing,
+  setIsEditing,
+}: EditBioProps) {
+  const [bioMessage, setBioMessage] = useState(currentBio)
 
   const queryClient = useQueryClient()
 
   const { mutate: mutateBio, isPending } = useMutation({
     mutationFn: () => updateProfileBio(userId, bioMessage),
     onSuccess: () => {
-      setBioMessage('')
       setIsEditing(false)
       queryClient.invalidateQueries({ queryKey: ['profile', userId] })
     },

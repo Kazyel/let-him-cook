@@ -1,12 +1,14 @@
 import { Link, createFileRoute, redirect } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
-import { ArrowLeft, PlusIcon } from 'lucide-react'
+import { ArrowLeft, CalendarIcon, PlusIcon } from 'lucide-react'
 import { getProfileByUserID, getRecipesByUserID } from '@/services/supabase'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { useAuth } from '@/lib/providers/auth-provider'
 import { EditBio } from '@/components/profile/edit-bio'
 import { Skeleton } from '@/components/ui/skeleton'
+import { cn } from '@/lib/utils'
+
 import logo from '@/assets/logo.png'
 
 export const Route = createFileRoute('/_app/profile/$userId')({
@@ -24,7 +26,6 @@ export const Route = createFileRoute('/_app/profile/$userId')({
 
 function RouteComponent() {
   const [isEditing, setIsEditing] = useState(false)
-
   const { user } = useAuth()
   const params = Route.useParams()
 
@@ -80,13 +81,19 @@ function RouteComponent() {
   const isCurrentUser = user.id === profile.user_id
 
   return (
-    <div className="w-[clamp(20vw,1300px,100%)] py-16 px-12 mx-auto flex-col md:flex-row flex">
-      <Avatar className="border-2 border-amber-500/30 h-[clamp(150px,40vw,250px)] w-[clamp(150px,40vw,250px)]">
-        <AvatarImage src={profile.avatar_url} />
-        <AvatarFallback className="text-4xl text-foreground bg-transparent">
-          {profile.name.charAt(0).toUpperCase()}
-        </AvatarFallback>
-      </Avatar>
+    <div className="w-[clamp(20vw,1300px,100%)] py-16 px-12 mx-auto flex-col md:flex-row flex gap-x-6">
+      <div className="relative h-[clamp(150px,40vw,250px)] w-[clamp(150px,40vw,250px)]">
+        <Avatar className="relative border-2 border-amber-500/30 size-full">
+          <AvatarImage src={profile.avatar_url} />
+          <AvatarFallback className="text-4xl text-foreground bg-transparent">
+            {profile.name.charAt(0).toUpperCase()}
+          </AvatarFallback>
+        </Avatar>
+
+        <div className="absolute z-20 text-foreground border border-amber-500/30 hover:border-amber-500/40 hover:bg-amber-500/20 transition-all duration-150 rounded-full bottom-5 right-5 p-1 bg-amber-500/10 backdrop-blur-sm">
+          <PlusIcon className="size-7 text-amber-500 stroke-1 cursor-pointer" />
+        </div>
+      </div>
 
       <div className="flex-1 flex flex-col px-0 py-12 md:px-12">
         <div className="flex flex-col gap-y-2">
@@ -95,6 +102,7 @@ function RouteComponent() {
           {isCurrentUser && (
             <EditBio
               userId={user.id}
+              currentBio={profile.bio}
               isEditing={isEditing}
               setIsEditing={setIsEditing}
             />
@@ -103,29 +111,29 @@ function RouteComponent() {
 
         <div className="py-4 mb-10">
           {!isEditing && (
-            <p className="text-base text-foreground/85">{profile.bio}</p>
+            <p className="text-lg text-foreground/85">{profile.bio}</p>
           )}
         </div>
 
         <div className="flex flex-col gap-y-4">
           <div className="flex items-center justify-between w-full border-b-2 border-amber-500/30 pb-4">
             {isCurrentUser ? (
-              <h2 className="text-4xl text-foreground font-bold">My recipes</h2>
+              <h2 className="text-3xl text-foreground font-bold">My recipes</h2>
             ) : (
-              <h2 className="text-4xl text-foreground font-bold">
+              <h2 className="text-3xl text-foreground font-bold">
                 Recipes by {profile.name}
               </h2>
             )}
 
             {isCurrentUser && (
-              <div className="flex gap-x-2.5 items-center group mt-3">
-                <button className="text-muted-foreground size-5 border border-muted-foreground rounded cursor-pointer group-hover:text-foreground/80 transition-all duration-150 group-hover:border-foreground/80">
-                  <PlusIcon className="size-4 mx-auto" />
-                </button>
-
+              <div className="flex gap-x-1 items-center group mt-3">
                 <p className="text-sm text-muted-foreground group-hover:text-foreground/80 transition-all duration-150 group-hover:underline cursor-pointer font-semibold">
                   Create new recipe
                 </p>
+
+                <button className="text-muted-foreground cursor-pointer group-hover:text-foreground/80 transition-all duration-150 group-hover:border-foreground/80">
+                  <PlusIcon className="size-4" />
+                </button>
               </div>
             )}
           </div>
@@ -133,15 +141,18 @@ function RouteComponent() {
           <div className="flex flex-col gap-y-6">
             <div className="flex flex-col gap-y-4">
               {recipes && recipes.length > 0 ? (
-                recipes.map((recipe) => (
+                recipes.map((recipe, index) => (
                   <Link
-                    key={recipe.title}
+                    key={`${recipe.id}-${index}`}
                     to={`/recipes/$recipeId`}
                     params={{ recipeId: recipe.id }}
-                    className="flex gap-x-4 items-center justify-between flex-1 hover:bg-amber-500/10 p-4 rounded-lg transition-all duration-150 cursor-pointer"
+                    className={cn(
+                      'flex gap-x-4 items-center justify-between flex-1 px-4 py-3 rounded-lg cursor-pointer',
+                      'hover:bg-amber-600/10 transition-all duration-150 hover:border-amber-500/30 border border-transparent',
+                    )}
                   >
                     <div className="flex items-center gap-x-4">
-                      <div className="w-10 h-10 rounded-full overflow-hidden bg-amber-500/30">
+                      <div className="size-10 rounded-full overflow-hidden bg-amber-500/30">
                         <img
                           src={recipe.image_url}
                           alt={recipe.title}
@@ -149,13 +160,14 @@ function RouteComponent() {
                         />
                       </div>
 
-                      <p className="text-xl text-foreground font-bold">
+                      <p className="text-xl tracking-wide font-semibold text-foreground">
                         {recipe.title}
                       </p>
                     </div>
 
-                    <p className="text-muted-foreground">
+                    <p className="text-amber-500/80 font-semibold italic tracking-wide flex items-center gap-x-3">
                       {new Date(recipe.created_at).toLocaleDateString()}
+                      <CalendarIcon className="size-4 shrink-0" />
                     </p>
                   </Link>
                 ))

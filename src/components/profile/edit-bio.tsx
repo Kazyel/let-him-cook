@@ -48,7 +48,7 @@ export function EditBio({
   if (!isEditing) {
     return (
       <button
-        className="cursor-pointer flex gap-2 items-center text-amber-500 hover:text-amber-400 transition-all duration-150 text-sm"
+        className="cursor-pointer mt-1.5 flex gap-x-2 items-center text-amber-500 hover:text-amber-400 transition-all duration-150 text-sm"
         onClick={() => setIsEditing(true)}
       >
         <EditIcon className="size-4" />

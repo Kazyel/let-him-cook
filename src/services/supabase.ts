@@ -1,28 +1,43 @@
 import { createClient } from '@supabase/supabase-js'
+import type {
+  Recipe,
+  ToggleVoteResponse,
+  UserProfile,
+} from '@/lib/types/supabase'
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string
 const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string
 
 const supabase = createClient(supabaseUrl, supabaseKey)
 
-export type UserProfile = {
-  user_id: string
-  name: string
-  bio: string
-  avatar_url: string
-  created_at: string
-}
+export async function toggleUpvote(
+  recipeId: string,
+  userId: string,
+): Promise<ToggleVoteResponse> {
+  const { error: deleteError, data: deleted } = await supabase
+    .from('recipe_votes')
+    .delete()
+    .eq('user_id', userId)
+    .eq('recipe_id', recipeId)
+    .select()
 
-export type Recipe = {
-  id: string
-  title: string
-  description: string
-  ingredients: Array<string>
-  instructions: Array<string>
-  user_id: string
-  image_url: string
-  video_url: string
-  created_at: string
+  if (!deleteError && deleted.length > 0) {
+    return { status: 'removed' }
+  }
+
+  const { error: insertError, data: inserted } = await supabase
+    .from('recipe_votes')
+    .insert({
+      user_id: userId,
+      recipe_id: recipeId,
+    })
+    .select()
+
+  if (!insertError && inserted.length > 0) {
+    return { status: 'added' }
+  }
+
+  throw insertError ?? deleteError
 }
 
 export async function getProfileByUserID(uuid: string) {
@@ -51,7 +66,7 @@ export async function getPaginatedRecipes(page: number) {
     const { data, error } = await supabase
       .schema('public')
       .from('recipes')
-      .select('title, description, user_id, image_url, created_at')
+      .select('title, description, user_id, image_url, upvotes, created_at')
       .order('created_at', { ascending: false })
       .range(page * 10, page * 10 + 10)
 
@@ -74,7 +89,7 @@ export async function getRecipesByUserID(uuid: string) {
     const { data, error } = await supabase
       .schema('public')
       .from('recipes')
-      .select('id, title, description, image_url, created_at')
+      .select('id, title, description, image_url, upvotes, created_at')
       .eq('user_id', uuid)
       .limit(10)
 
@@ -98,7 +113,7 @@ export async function getSingleRecipeById(id: string) {
       .schema('public')
       .from('recipes')
       .select(
-        'title, description, ingredients, instructions, user_id, image_url, video_url, created_at',
+        'title, description, ingredients, instructions, user_id, image_url, video_url, upvotes, created_at',
       )
       .eq('id', id)
       .single()

@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { createFileRoute } from '@tanstack/react-router'
 import { CookingPotIcon, ScrollTextIcon, ThumbsUp } from 'lucide-react'
-import supabase, { getSingleRecipeById } from '@/services/supabase'
+import supabase, { getSingleRecipeById } from '@/lib/services/supabase'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { useIsMobile } from '@/lib/hooks/use-mobile'
 import { cn, getEmbedUrl } from '@/lib/utils'
@@ -64,6 +64,7 @@ function RouteComponent() {
       <div className="flex flex-col md:flex-row gap-8">
         <div className="flex flex-col gap-y-4">
           <h1 className="text-6xl font-bold text-foreground">{recipe.title}</h1>
+
           <h2 className="pl-2 text-xl font-medium text-muted-foreground text-pretty">
             {recipe.description}
           </h2>
@@ -91,6 +92,7 @@ function RouteComponent() {
               )}
             >
               <ThumbsUp className="size-9  text-amber-500" />
+
               <span className="text-foreground text-2xl font-bold">
                 {recipe.upvotes}
               </span>
@@ -108,6 +110,7 @@ function RouteComponent() {
                 {recipe.title.charAt(0).toUpperCase()}
               </AvatarFallback>
             </Avatar>
+
             <button
               onClick={handleUpvote}
               className={cn(
@@ -117,6 +120,7 @@ function RouteComponent() {
               )}
             >
               <ThumbsUp className="size-9  text-amber-500" />
+
               <span className="text-foreground text-2xl font-bold">
                 {recipe.upvotes}
               </span>
@@ -149,6 +153,7 @@ function RouteComponent() {
         <div className="flex flex-col gap-y-4">
           <div className="flex items-center w-full gap-x-4 border-b-2 border-amber-500/30 pb-4">
             <ScrollTextIcon className="size-9 text-amber-500 shrink-0" />
+
             <h2 className="text-4xl text-foreground font-bold">Instructions</h2>
           </div>
 

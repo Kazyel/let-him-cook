@@ -2,7 +2,7 @@ import { Link } from '@tanstack/react-router'
 import { toast } from 'sonner'
 import { CogIcon, LogOutIcon, Moon, Sun, UserIcon } from 'lucide-react'
 import { AvatarIcon } from './avatar-icon'
-import type { UserMetadata } from '@/types/user'
+import type { UserMetadata } from '@/lib/types/user'
 import { useAuth } from '@/lib/providers/auth-provider'
 import { useTheme } from '@/lib/providers/theme-provider'
 import {
@@ -17,7 +17,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import supabase from '@/services/supabase'
+import supabase from '@/lib/services/supabase'
 
 export function AvatarDropdown() {
   const { user } = useAuth()
@@ -106,7 +106,7 @@ export function AvatarDropdown() {
         {/* Logout Button */}
         <DropdownMenuItem
           onClick={handleLogout}
-          className="cursor-pointer tracking-tight font-medium py-1.5 px-2.5 rounded-sm"
+          className="cursor-pointer tracking-tight font-medium py-3 px-2.5 rounded-sm"
         >
           <LogOutIcon className="size-5" />
           <span className="text-muted-foreground text-base">Logout</span>

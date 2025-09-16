@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
-import { getPaginatedRecipes } from '@/services/supabase'
+import { getPaginatedRecipes } from '@/lib/services/supabase'
 
 export const Route = createFileRoute('/_app/recipes/')({
   component: RouteComponent,

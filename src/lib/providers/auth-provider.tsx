@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import supabase from '../../services/supabase'
+import supabase from '../services/supabase'
 import type { ReactNode } from 'react'
 import type { User } from '@supabase/supabase-js'
 import { router } from '@/main'

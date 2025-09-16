@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 import type { FormEvent } from 'react'
-import supabase from '@/services/supabase'
+import supabase from '@/lib/services/supabase'
 
 export const Route = createFileRoute('/auth/register')({
   component: RegisterComponent,

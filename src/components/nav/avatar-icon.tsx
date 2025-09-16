@@ -1,5 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
-import type { UserMetadata } from '@/types/user'
+import type { UserMetadata } from '@/lib/types/user'
 import { useAuth } from '@/lib/providers/auth-provider'
 
 export function AvatarIcon() {

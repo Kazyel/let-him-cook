@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import type { ToggleVoteResponse } from '../types/supabase'
-import { toggleUpvote } from '@/services/supabase'
+import { toggleUpvote } from '@/lib/services/supabase'
 
 export function useToggleVote() {
   const queryClient = useQueryClient()

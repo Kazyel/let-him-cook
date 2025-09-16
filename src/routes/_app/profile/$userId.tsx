@@ -2,7 +2,7 @@ import { Link, createFileRoute, redirect } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import { ArrowLeft, CalendarIcon, PlusIcon, ThumbsUp } from 'lucide-react'
-import { getProfileByUserID, getRecipesByUserID } from '@/services/supabase'
+import { getProfileByUserID, getRecipesByUserID } from '@/lib/services/supabase'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { useAuth } from '@/lib/providers/auth-provider'
 import { EditBio } from '@/components/profile/edit-bio'
@@ -127,9 +127,12 @@ function RouteComponent() {
 
             {isCurrentUser && (
               <div className="flex self-end gap-x-1 items-center group">
-                <p className="text-sm text-muted-foreground group-hover:text-foreground/80 transition-all duration-150 group-hover:underline cursor-pointer font-semibold">
+                <Link
+                  className="text-sm text-muted-foreground group-hover:text-foreground/80 transition-all duration-150 group-hover:underline cursor-pointer font-semibold"
+                  to="/recipes/new"
+                >
                   Create new recipe
-                </p>
+                </Link>
 
                 <button className="text-muted-foreground cursor-pointer group-hover:text-foreground/80 transition-all duration-150 group-hover:border-foreground/80">
                   <PlusIcon className="size-4" />

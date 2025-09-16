@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { EditIcon, Loader2, SendIcon } from 'lucide-react'
-import supabase from '@/services/supabase'
+import supabase from '@/lib/services/supabase'
 
 interface EditBioProps {
   userId: string
